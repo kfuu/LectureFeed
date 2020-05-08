@@ -7,13 +7,16 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
 
 class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 	
-	var profileModel = Profile(isHost: false, name: "Kevin")
+	var profileModel: Profile?
+	var tuplePassed: (String, String)?
 	var passcodeTextField: UITextField?
 	
-	let labels = [String]() //["label1", "label2", "label3", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4"]
+	let labels = ["label1", "label2", "label3", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4"] // [String]()
 
 	@IBOutlet weak var homeLabel: UILabel!
 	@IBOutlet weak var lectureCollection: UICollectionView!
@@ -24,10 +27,33 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		homeLabel.text = "Welcome, " + profileModel.name
+		//print(profileModel?.email)
+		//print(profileModel?.name)
+		//print(profileModel?.isHost)
 		
-		//lectureCollection.dataSource = self
-		//lectureCollection.delegate = self
+		//profileModel = Profile(isHost: <#T##Bool#>, name: <#T##String#>, email: <#T##String#>)
+		
+		//print(tuplePassed)
+		
+		let user = Auth.auth().currentUser
+		if let user = user {
+			//print(user.email)
+			db.collection("Users").document(user.email!).getDocument(completion: { (document, error) in
+				if let document = document, document.exists {
+					let name = document.get("Name") as! String
+					self.homeLabel.text = "Welcome, " + name
+				}
+				else {
+					print("Document does not exist")
+				}
+			})
+		}
+		
+		//homeLabel.text = "Welcome, " + (profileModel?.name ?? "error")
+		//homeLabel.text = "Welcome, " + (tuplePassed?.0 ?? "error")
+		
+		lectureCollection.dataSource = self
+		lectureCollection.delegate = self
     }
     
 	@IBAction func connectToLecture(_ sender: Any) {

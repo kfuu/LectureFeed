@@ -13,10 +13,12 @@ import Foundation
 class Profile {
 	var isHost: Bool
 	var name: String
+	var email: String
 	var lectureList: [Lecture]?
 	
-	init(isHost: Bool, name: String) {
+	init(isHost: Bool, name: String, email: String) {
 		self.isHost = isHost
 		self.name = name
+		self.email = email
 	}
 }

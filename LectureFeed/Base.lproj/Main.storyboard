@@ -46,13 +46,28 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CGW-68-asI">
-                                <rect key="frame" x="180" y="424" width="54" height="30"/>
+                                <rect key="frame" x="150" y="501" width="115" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Sign Up"/>
+                                <state key="normal" title="Confirm"/>
                                 <connections>
                                     <action selector="confirmButtonAction:" destination="Rih-r5-3EJ" eventType="touchUpInside" id="RcP-46-MBN"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="YTQ-ij-Z28" userLabel="userTypeToggle">
+                                <rect key="frame" x="154" y="403" width="185" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Lecturer"/>
+                                    <segment title="Lecturee"/>
+                                </segments>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sign Up as:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo0-0H-ZK1" userLabel="signUpAsLabel">
+                                <rect key="frame" x="48" y="408" width="87" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="gHg-rt-CKc"/>
@@ -63,6 +78,9 @@
                         <outlet property="emailTextField" destination="pbg-Pu-BVt" id="DMe-9I-9F3"/>
                         <outlet property="nameTextField" destination="4qg-mp-8K2" id="K0b-Q3-9qr"/>
                         <outlet property="passwordTextField" destination="NbQ-bh-ZwE" id="HX2-DE-FYr"/>
+                        <outlet property="signUpAsLabel" destination="lo0-0H-ZK1" id="o1s-cz-G71"/>
+                        <outlet property="signUpAsToggle" destination="YTQ-ij-Z28" id="M1p-uf-zja"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="loginToHome" id="e8F-pl-zCc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qJx-Ob-GlA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -74,17 +92,17 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeVC" customModule="LectureFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[welcome label]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQB-fT-fmd" userLabel="HomeLabel">
-                                <rect key="frame" x="34" y="59" width="180" height="29"/>
+                                <rect key="frame" x="34" y="15" width="180" height="29"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="792-ai-rOe" userLabel="connectButton">
-                                <rect key="frame" x="361" y="63" width="20" height="21"/>
+                                <rect key="frame" x="361" y="19" width="20" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" image="link.circle" catalog="system"/>
@@ -93,7 +111,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Llo-w3-VC5" userLabel="lectureCollection">
-                                <rect key="frame" x="20" y="107" width="374" height="755"/>
+                                <rect key="frame" x="20" y="63" width="374" height="745"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PjQ-n6-9Pa">
                                     <size key="itemSize" width="134" height="134"/>
@@ -163,6 +181,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="RFp-TI-Ook"/>
                     <connections>
                         <outlet property="homeLabel" destination="HQB-fT-fmd" id="rrq-Fj-Bdj"/>
                         <outlet property="lectureCollection" destination="Llo-w3-VC5" id="W0L-vf-ZLF"/>

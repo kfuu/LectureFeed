@@ -8,22 +8,29 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
 
 class SignUpSignInVC: UIViewController {
 	
 	var signInSelected: Bool = false
+	//var profileData: Profile?
+	var dataTuple: (String, String)?
 
 	@IBOutlet weak var confirmButton: UIButton!
 	@IBOutlet weak var authToggle: UISegmentedControl!
 	@IBOutlet weak var emailTextField: UITextField!
 	@IBOutlet weak var passwordTextField: UITextField!
 	@IBOutlet weak var nameTextField: UITextField!
+	@IBOutlet weak var signUpAsLabel: UILabel!
+	@IBOutlet weak var signUpAsToggle: UISegmentedControl!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-		//print(authToggle.selectedSegmentIndex)
+		
+		confirmButton.setTitle("Sign Up", for: .normal) // initial
+		
     }
     
 	@IBAction func toggleChange(_ sender: Any) {
@@ -31,11 +38,15 @@ class SignUpSignInVC: UIViewController {
 		
 		if signInSelected {
 			nameTextField.isHidden = true
-			confirmButton.titleLabel?.text = "Sign In"
+			signUpAsLabel.isHidden = true
+			signUpAsToggle.isHidden = true
+			confirmButton.setTitle("Sign In", for: .normal)
 		}
 		else {
 			nameTextField.isHidden = false
-			confirmButton.titleLabel?.text = "Sign Up"
+			signUpAsLabel.isHidden = false
+			signUpAsToggle.isHidden = false
+			confirmButton.setTitle("Sign Up", for: .normal)
 		}
 	}
 	
@@ -55,22 +66,20 @@ class SignUpSignInVC: UIViewController {
 		}
 		
 		Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
-			print(user)
-			print(error)
-			
-			if error != nil {
-				print(error ?? "")
-				return
-			}
-			
+			print(user ?? "No user")
+			print(error ?? "No error")
+
 			if user != nil {
 				// segue to new VC with data
-				print("good!")
+				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: "", email: email)
+				self.dataTuple = ("", email)
+				self.performSegue(withIdentifier: "loginToHome", sender: self)
+				return
 			}
 			else { // invalid credentials
 				let alert = UIAlertController(title: "Invalid Input", message: "Email and password do not match account credentials. Please try again, or make a new account if you don't already have one.", preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-				self.present(alert, animated: true)
+				self.present(alert, animated: true, completion: nil)
 				return
 			}
 		})
@@ -83,32 +92,43 @@ class SignUpSignInVC: UIViewController {
 		}
 		
 		Auth.auth().createUser(withEmail: email, password: password, completion: {(user, error) in
-			if error != nil {
-				print(error ?? "")
-				return
-			}
-			
-			// let newProfile = Profile()
-			
 			if user != nil && !name.isEmpty {
 				// segue
+				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: name, email: email)
+				self.dataTuple = (name, email)
+				self.performSegue(withIdentifier: "loginToHome", sender: self)
 				
 				// add account to database
+				db.collection("Users").document(email).setData([
+					"Email": email,
+					"Name": name,
+					"isLecturer": self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer"
+				]) { err in
+					if let err = err {
+						print("Error writing document: \(err)")
+					} else {
+						print("Document successfully written.")
+					}
+				}
 			}
 			else { // error adding account to db
-				
+				let alert = UIAlertController(title: "Invalid Input", message: "Please make sure you typed your email correctly.", preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+				self.present(alert, animated: true)
+				return
 			}
 		})
 	}
 	
 	/*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
     */
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		let vc = segue.destination as? HomeVC
+		vc?.modalPresentationStyle = .fullScreen
+		//vc?.profileModel = self.profileData
+		vc?.tuplePassed = dataTuple
+	}
 
 }
