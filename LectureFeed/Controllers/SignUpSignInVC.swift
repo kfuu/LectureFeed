@@ -59,19 +59,6 @@ class SignUpSignInVC: UIViewController {
 		}
 	}
 	
-//	func checkIfIsLecturer(email: String) -> () {
-//		// this is asynchronous
-//		db.collection("Users").document(email).getDocument(completion: { (document, error) in
-//			if let document = document, document.exists {
-//				print("checking...")
-//				document.get("isLecturer")
-//			}
-//			else {
-//				print("Document does not exist")
-//				}
-//		})
-//	}
-	
 	func handleSignIn() {
 		guard let email = emailTextField.text, let password = passwordTextField.text else {
 			print("Must enter email and password")
@@ -86,8 +73,8 @@ class SignUpSignInVC: UIViewController {
 				// segue to new VC with data
 				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: "", email: email)
 				self.dataTuple = ("", email)
-				
 				self.performSegue(withIdentifier: "loginToHome", sender: self)
+				self.clearTextFields()
 
 			}
 			else { // invalid credentials
@@ -107,20 +94,9 @@ class SignUpSignInVC: UIViewController {
 		
 		Auth.auth().createUser(withEmail: email, password: password, completion: {(user, error) in
 			if user != nil && !name.isEmpty {
-				// segue
-				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: name, email: email)
 				self.dataTuple = (name, email)
-				
 				self.performSegue(withIdentifier: "loginToHome", sender: self)
-				
-//				if self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer" {
-//					print("C")
-//					self.performSegue(withIdentifier: "loginToHostHome", sender: self)
-//				}
-//				else {
-//					print("D")
-//					self.performSegue(withIdentifier: "loginToHome", sender: self)
-//				}
+				self.clearTextFields()
 				
 				
 				// add account to database
@@ -145,6 +121,12 @@ class SignUpSignInVC: UIViewController {
 		})
 	}
 	
+	func clearTextFields() {
+		self.emailTextField.text = ""
+		self.passwordTextField.text = ""
+		self.nameTextField.text = ""
+	}
+	
 	/*
     // MARK: - Navigation
     */
@@ -153,13 +135,9 @@ class SignUpSignInVC: UIViewController {
 		if segue.destination is HomeVC {
 			let vc = segue.destination as? HomeVC
 			vc?.modalPresentationStyle = .fullScreen
-			
 			vc?.tuplePassed = dataTuple
 		}
-//		if segue.destination is HomeHostVC {
-//			let vc2 = segue.destination as? HomeHostVC
-//			vc2?.modalPresentationStyle = .fullScreen
-//		}
+
 	}
 
 }

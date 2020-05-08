@@ -18,6 +18,7 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	var tuplePassed: (String, String)?
 	var passcodeTextField: UITextField?
 	var lectureIDtoPass: String?
+	var fulllectureIDtoPass: String?
 	
 	let labels = ["label1", "label2", "label3", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4"] // [String]()
 
@@ -28,7 +29,9 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
-
+		
+		self.isModalInPresentation = true
+		
         // Do any additional setup after loading the view.
 		//profileModel = Profile(isHost: false, name: tuplePassed!.0, email: tuplePassed!.1) // initialization
 		
@@ -74,14 +77,17 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 			let lectureID: String = ref!.documentID
 			let new_lectureID: String = String(lectureID.prefix(5))
 			self.lectureIDtoPass = new_lectureID
+			self.fulllectureIDtoPass = lectureID
 			
 			let alertController = UIAlertController(title: "Lecture ID: \(new_lectureID)", message: "Please distribute this lecture ID code to the lecturees. Don't press OK until you are ready to proceed.", preferredStyle: .alert)
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in
 				print("cool")
-				
+
 				self.performSegue(withIdentifier: "toLecture", sender: self)
 			})
+			//let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 			alertController.addAction(okAction)
+			//alertController.addAction(cancelAction)
 			
 			self.present(alertController, animated: true)
 			//"question1" : ["body": "new stuff", "sender": "hello"
@@ -104,6 +110,9 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 						for document in querySnapshot!.documents {
 							if String((document.documentID).prefix(5)) == self.passcodeTextField?.text { // take care of time issues in the future. for now, IDs probably won't ever match due to randomness.
 								lectureFound = true
+								self.lectureIDtoPass = String((document.documentID).prefix(5))
+								self.fulllectureIDtoPass = String(document.documentID)
+								
 								self.performSegue(withIdentifier: "toLecture", sender: self)
 								break
 							}
@@ -124,6 +133,17 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 			alertController.addAction(cancelAction)
 			
 			self.present(alertController, animated: true)
+		}
+	}
+	
+	@IBAction func signOut(_ sender: Any) {
+		//self.performSegue(withIdentifier: "signOut", sender: self)
+		let firebaseAuth = Auth.auth()
+		do {
+			try firebaseAuth.signOut()
+			self.dismiss(animated: true, completion: {})
+		} catch let signOutError as NSError {
+			print("Error signing out: \(signOutError)")
 		}
 	}
 	
@@ -158,12 +178,24 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
     */
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is FeedVC {
+		if segue.identifier == "toLecture" {
 			// pass the profile object
-			let vc = segue.destination as? FeedVC
-			vc?.modalPresentationStyle = .fullScreen // maybe? could be affected by nav vc
-			vc?.profileModel = self.profileModel
-			vc?.lectureID = self.lectureIDtoPass
+			
+//			let vc = segue.destination as? FeedVC
+//			vc?.modalPresentationStyle = .fullScreen // maybe? could be affected by nav vc
+//			vc?.profileModel = self.profileModel
+//			vc?.lectureID = self.lectureIDtoPass
+//			vc?.fullLectureID = self.fulllectureIDtoPass
+			
+			let destinationNavigationController = segue.destination as! UINavigationController
+			let targetController = destinationNavigationController.topViewController as? FeedVC
+			
+			targetController?.profileModel = self.profileModel
+			targetController?.lectureID = self.lectureIDtoPass
+			targetController?.fullLectureID = self.fulllectureIDtoPass
+			
+			targetController?.modalPresentationStyle = .fullScreen
+			
 		}
 	}
 

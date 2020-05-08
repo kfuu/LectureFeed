@@ -9,6 +9,5 @@
 import Foundation
 
 class Lecture {
-	// lecture ID, full lecture string contents
-	// etc.
+
 }
