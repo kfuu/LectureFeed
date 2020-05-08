@@ -59,6 +59,19 @@ class SignUpSignInVC: UIViewController {
 		}
 	}
 	
+//	func checkIfIsLecturer(email: String) -> () {
+//		// this is asynchronous
+//		db.collection("Users").document(email).getDocument(completion: { (document, error) in
+//			if let document = document, document.exists {
+//				print("checking...")
+//				document.get("isLecturer")
+//			}
+//			else {
+//				print("Document does not exist")
+//				}
+//		})
+//	}
+	
 	func handleSignIn() {
 		guard let email = emailTextField.text, let password = passwordTextField.text else {
 			print("Must enter email and password")
@@ -73,8 +86,9 @@ class SignUpSignInVC: UIViewController {
 				// segue to new VC with data
 				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: "", email: email)
 				self.dataTuple = ("", email)
+				
 				self.performSegue(withIdentifier: "loginToHome", sender: self)
-				return
+
 			}
 			else { // invalid credentials
 				let alert = UIAlertController(title: "Invalid Input", message: "Email and password do not match account credentials. Please try again, or make a new account if you don't already have one.", preferredStyle: .alert)
@@ -96,7 +110,18 @@ class SignUpSignInVC: UIViewController {
 				// segue
 				//self.profileData = Profile(isHost: self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer", name: name, email: email)
 				self.dataTuple = (name, email)
+				
 				self.performSegue(withIdentifier: "loginToHome", sender: self)
+				
+//				if self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer" {
+//					print("C")
+//					self.performSegue(withIdentifier: "loginToHostHome", sender: self)
+//				}
+//				else {
+//					print("D")
+//					self.performSegue(withIdentifier: "loginToHome", sender: self)
+//				}
+				
 				
 				// add account to database
 				db.collection("Users").document(email).setData([
@@ -125,10 +150,16 @@ class SignUpSignInVC: UIViewController {
     */
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		let vc = segue.destination as? HomeVC
-		vc?.modalPresentationStyle = .fullScreen
-		//vc?.profileModel = self.profileData
-		vc?.tuplePassed = dataTuple
+		if segue.destination is HomeVC {
+			let vc = segue.destination as? HomeVC
+			vc?.modalPresentationStyle = .fullScreen
+			
+			vc?.tuplePassed = dataTuple
+		}
+//		if segue.destination is HomeHostVC {
+//			let vc2 = segue.destination as? HomeHostVC
+//			vc2?.modalPresentationStyle = .fullScreen
+//		}
 	}
 
 }

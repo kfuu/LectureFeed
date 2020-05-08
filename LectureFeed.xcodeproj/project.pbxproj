@@ -18,6 +18,7 @@
 		0341FDA8245CE33800379A22 /* LectureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0341FDA7245CE33800379A22 /* LectureCell.swift */; };
 		0341FDAA245CEDB800379A22 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0341FDA9245CEDB800379A22 /* GoogleService-Info.plist */; };
 		0341FDAC245D025B00379A22 /* SignUpSignInVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0341FDAB245D025B00379A22 /* SignUpSignInVC.swift */; };
+		03978B1B246542FD00CA037C /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03978B1A246542FD00CA037C /* FeedVC.swift */; };
 		C1CA996D29CB8863FD0F9E56 /* Pods_LectureFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08C2C9763560263872AE8E87 /* Pods_LectureFeed.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		0341FDA7245CE33800379A22 /* LectureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LectureCell.swift; sourceTree = "<group>"; };
 		0341FDA9245CEDB800379A22 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0341FDAB245D025B00379A22 /* SignUpSignInVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpSignInVC.swift; sourceTree = "<group>"; };
+		03978B1A246542FD00CA037C /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		08C2C9763560263872AE8E87 /* Pods_LectureFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LectureFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C18D6D08DA8EF2BDC7D7F93 /* Pods-LectureFeed.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LectureFeed.debug.xcconfig"; path = "Target Support Files/Pods-LectureFeed/Pods-LectureFeed.debug.xcconfig"; sourceTree = "<group>"; };
 		A4271A2A39DD5E583A622758 /* Pods-LectureFeed.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LectureFeed.release.xcconfig"; path = "Target Support Files/Pods-LectureFeed/Pods-LectureFeed.release.xcconfig"; sourceTree = "<group>"; };
@@ -90,8 +92,9 @@
 		0341FD9D245CDBDF00379A22 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0341FDA1245CDC2100379A22 /* HomeVC.swift */,
 				0341FDAB245D025B00379A22 /* SignUpSignInVC.swift */,
+				0341FDA1245CDC2100379A22 /* HomeVC.swift */,
+				03978B1A246542FD00CA037C /* FeedVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				0341FDA2245CDC2100379A22 /* HomeVC.swift in Sources */,
 				0341FDA4245CDC3100379A22 /* Profile.swift in Sources */,
 				0341FDAC245D025B00379A22 /* SignUpSignInVC.swift in Sources */,
+				03978B1B246542FD00CA037C /* FeedVC.swift in Sources */,
 				0341FD8A245CDB8A00379A22 /* AppDelegate.swift in Sources */,
 				0341FD8C245CDB8A00379A22 /* SceneDelegate.swift in Sources */,
 				0341FDA6245CE0BD00379A22 /* Lecture.swift in Sources */,

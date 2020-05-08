@@ -80,7 +80,7 @@
                         <outlet property="passwordTextField" destination="NbQ-bh-ZwE" id="HX2-DE-FYr"/>
                         <outlet property="signUpAsLabel" destination="lo0-0H-ZK1" id="o1s-cz-G71"/>
                         <outlet property="signUpAsToggle" destination="YTQ-ij-Z28" id="M1p-uf-zja"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="loginToHome" id="e8F-pl-zCc"/>
+                        <segue destination="P4o-Oz-TEj" kind="show" identifier="loginToHome" id="e8F-pl-zCc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qJx-Ob-GlA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -96,13 +96,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQB-fT-fmd" userLabel="HomeLabel">
-                                <rect key="frame" x="34" y="15" width="0.0" height="0.0"/>
+                                <rect key="frame" x="34" y="71" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="792-ai-rOe" userLabel="connectButton">
-                                <rect key="frame" x="361" y="19" width="20" height="21"/>
+                                <rect key="frame" x="361" y="75" width="20" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" image="link.circle" catalog="system"/>
@@ -111,7 +111,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Llo-w3-VC5" userLabel="lectureCollection">
-                                <rect key="frame" x="20" y="34" width="374" height="774"/>
+                                <rect key="frame" x="20" y="90" width="374" height="718"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="PjQ-n6-9Pa">
                                     <size key="itemSize" width="134" height="134"/>
@@ -185,11 +185,47 @@
                     <connections>
                         <outlet property="homeLabel" destination="HQB-fT-fmd" id="rrq-Fj-Bdj"/>
                         <outlet property="lectureCollection" destination="Llo-w3-VC5" id="W0L-vf-ZLF"/>
+                        <segue destination="pm5-dN-1Pm" kind="show" identifier="toLecture" id="Cc5-YB-YxJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="117.85714285714285"/>
+            <point key="canvasLocation" x="1042.0289855072465" y="392.41071428571428"/>
+        </scene>
+        <!--FeedVC-->
+        <scene sceneID="kpA-if-Mze">
+            <objects>
+                <viewController id="pm5-dN-1Pm" customClass="FeedVC" customModule="LectureFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sjd-Px-3YY">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="XkN-9u-xga"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ErS-Ne-rCY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4l6-ZN-KEd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1857.9710144927537" y="391.74107142857139"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="P1F-cM-KjX">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="P4o-Oz-TEj" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Esj-cq-P9V"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="QX6-1M-hu8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ur1-mI-XMA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PBe-C6-6vw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="392.41071428571428"/>
         </scene>
     </scenes>
     <resources>
