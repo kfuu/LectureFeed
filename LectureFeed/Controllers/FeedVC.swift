@@ -2,9 +2,7 @@
 //  FeedVC.swift
 //  LectureFeed
 //
-//  Created by Silin Chen on 5/8/20.
-//  Copyright © 2020 Silin Chen. All rights reserved.
-//
+
 
 import UIKit
 import Firebase
@@ -20,17 +18,33 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	var lectureID: String?
 	var fullLectureID: String?
 	//var questionList: [Question] = []
+	var listener: ListenerRegistration? = nil
 
 	@IBOutlet weak var feedTable: UITableView!
+	@IBAction func unwindToFeed(_ sender: UIStoryboardSegue) {
+		print("HELLO IM BACK")
+	}
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+		// Do any additional setup after loading the view.
 
 		navigationItem.title = "Lecture ID: " + (lectureID ?? "00000")
 		
-		loadTable()
-
-        // Do any additional setup after loading the view.
+		listener = db.collection("Lectures").document(fullLectureID!).addSnapshotListener { documentSnapshot, error in
+			guard let document = documentSnapshot else {
+				print("Error fetching document: \(error)")
+				return
+			}
+			guard document.data() != nil else {
+				print("Document data was empty")
+				return
+			}
+			
+			self.loadTable()
+			
+		}
+        
     }
 	
 	func loadTable() {
@@ -39,21 +53,24 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 		docRef.getDocument { (document, error) in
 			if let document = document, document.exists {
 				let docDate = document.get("date") as! Timestamp
-				let questionArray = document.get("questionList") as! NSArray
+				//let questionArray = document.get("questionList") as! NSArray
+				let questionMap = document.get("questionMap") as! NSDictionary
 
 				arr.shared.questionsArr = []
 				
-				for question in questionArray {
-					let qM = question as! NSDictionary
-					let bodyText = qM.value(forKey: "bodyText") as! String
-					let sender = qM.value(forKey: "sender") as! String
-					let numLikes = qM.value(forKey: "numLikes") as! Int
-					let date = qM.value(forKey: "date") as! Timestamp
+				for (questionNum, questionObj) in questionMap {
+					let question = questionObj as! NSDictionary
+					
+					let bodyText = question.value(forKey: "bodyText") as! String
+					let sender = question.value(forKey: "sender") as! String
+					let date = question.value(forKey: "date") as! Timestamp
+					let numLikes = question.value(forKey: "numLikes") as! Int
 					let dateNS = date.dateValue()
 					
-					let questionObject = Question(sender: sender, bodyText: bodyText, date: dateNS as Date, numLikes: numLikes)
-					arr.shared.questionsArr.append(questionObject)
-				} // end for loop
+					let q = Question(sender: sender, bodyText: bodyText, date: dateNS as Date, numLikes: numLikes)
+					arr.shared.questionsArr.append(q)
+				}
+
 			} // end document exists
 			else {
 				print("Document does not exist.")
@@ -100,10 +117,10 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 		return 1
 	}
 	
-	
-//	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//		let vc = segue.destination as? QuestionVC
-//
-//	}
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		let vc = segue.destination as? QuestionVC
+		vc?.lectureID = self.fullLectureID
+		vc?.profileModel = self.profileModel
+	}
 
 }

@@ -2,15 +2,17 @@
 //  HomeVC.swift
 //  LectureFeed
 //
-//  Created by Silin Chen on 5/1/20.
-//  Copyright © 2020 Silin Chen. All rights reserved.
-//
+
 
 import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
-import SwiftSocket
+
+public class lectureArr {
+	var lectureIDArr: [String] = []
+	public static let shared = lectureArr()
+}
 
 class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 	
@@ -20,7 +22,7 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	var lectureIDtoPass: String?
 	var fulllectureIDtoPass: String?
 	
-	let labels = ["label1", "label2", "label3", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4"] // [String]()
+	let labels = [String]() //["label1", "label2", "label3", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4", "label4"]
 
 	@IBOutlet weak var homeLabel: UILabel!
 	@IBOutlet weak var lectureCollection: UICollectionView!
@@ -35,6 +37,19 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
         // Do any additional setup after loading the view.
 		//profileModel = Profile(isHost: false, name: tuplePassed!.0, email: tuplePassed!.1) // initialization
 		
+		getUserProfile()
+		//loadCollectionView()
+
+		lectureCollection.dataSource = self
+		lectureCollection.delegate = self
+    }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		self.loadCollectionView()
+	}
+	
+	
+	func getUserProfile() {
 		let user = Auth.auth().currentUser
 		if let user = user {
 			//print(user.email)
@@ -45,26 +60,35 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 					let email = document.get("Email") as! String
 					self.profileModel = Profile(isHost: isLecturer, name: name, email: email)
 					
+					let idMap = document.get("IDMap") as! NSDictionary
+					for (id, b) in idMap {
+						lectureArr.shared.lectureIDArr.append(id as! String)
+					}
+					
 					self.homeLabel.text = "Welcome, " + name
 				}
 				else {
 					print("Document does not exist")
 				}
+				
+				self.loadCollectionView()
 			})
 		}
-		
-		//homeLabel.text = "Welcome, " + (profileModel?.name ?? "error")
-		//homeLabel.text = "Welcome, " + (tuplePassed?.0 ?? "error")
-		
-		lectureCollection.dataSource = self
-		lectureCollection.delegate = self
-    }
-    
+	}
+	
+	func loadCollectionView() {
+		self.lectureCollection.reloadData()
+	}
+
 	@IBAction func connectToLecture(_ sender: Any) {
 		if self.profileModel!.isHost {
-			//print("testing! lecturer will generate new code here.")
 			var ref: DocumentReference? = nil
-			ref = db.collection("Lectures").addDocument(data: [:]) {
+			ref = db.collection("Lectures").addDocument(data: [
+				"count" : 0,
+				"date" : Timestamp(date: Date()),
+				"questionMap" : [:],
+				"lectureStartedBy" : self.profileModel?.name
+			]) {
 				err in
 				if let err = err {
 					print("Error adding document: \(err)")
@@ -79,6 +103,22 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 			self.lectureIDtoPass = new_lectureID
 			self.fulllectureIDtoPass = lectureID
 			
+			//print("A")
+			// add lectures attended to IDMap in Users collection
+			let docRef = db.collection("Users").document(self.profileModel!.email)
+			docRef.getDocument { (document, error) in
+				if let document = document, document.exists {
+					//let docCount = document.get("count") as! Int
+					docRef.setData([
+						"IDMap" : [lectureID : true]
+					], merge: true)
+					//docRef.setData(["count": docCount+1], merge: true)
+				}
+			}
+			//print("B")
+			
+			//self.loadCollectionView()
+//
 			let alertController = UIAlertController(title: "Lecture ID: \(new_lectureID)", message: "Please distribute this lecture ID code to the lecturees. Don't press OK until you are ready to proceed.", preferredStyle: .alert)
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in
 				print("cool")
@@ -113,6 +153,22 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 								self.lectureIDtoPass = String((document.documentID).prefix(5))
 								self.fulllectureIDtoPass = String(document.documentID)
 								
+								//print("J")
+								// add lectures attended to IDMap in Users collection
+								let docRef = db.collection("Users").document(self.profileModel!.email)
+								docRef.getDocument { (document, error) in
+									if let document = document, document.exists {
+										//let docCount = document.get("count") as! Int
+										docRef.setData([
+											"IDMap" : [self.fulllectureIDtoPass : true]
+										], merge: true)
+										//docRef.setData(["count": docCount+1], merge: true)
+									}
+								}
+								//print("K")
+								
+								//self.loadCollectionView()
+								
 								self.performSegue(withIdentifier: "toLecture", sender: self)
 								break
 							}
@@ -125,7 +181,6 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 						}
 					}
 					
-					// print passcode failed here
 				}
 			})
 			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -141,6 +196,7 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		let firebaseAuth = Auth.auth()
 		do {
 			try firebaseAuth.signOut()
+			lectureArr.shared.lectureIDArr = []
 			self.dismiss(animated: true, completion: {})
 		} catch let signOutError as NSError {
 			print("Error signing out: \(signOutError)")
@@ -154,12 +210,12 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return labels.count
+		return lectureArr.shared.lectureIDArr.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "lectureCell", for: indexPath) as! LectureCell
-		cell.lectureCellLabel.text = labels[indexPath.item]
+		cell.lectureCellLabel.text = String(lectureArr.shared.lectureIDArr[indexPath.item].prefix(5))
 		return cell
 	}
 	

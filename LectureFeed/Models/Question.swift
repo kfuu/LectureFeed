@@ -2,9 +2,7 @@
 //  Question.swift
 //  LectureFeed
 //
-//  Created by Silin Chen on 5/8/20.
-//  Copyright © 2020 Silin Chen. All rights reserved.
-//
+
 
 import Foundation
 import UIKit

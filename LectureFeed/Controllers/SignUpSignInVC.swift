@@ -2,9 +2,7 @@
 //  SignUpSignInVC.swift
 //  LectureFeed
 //
-//  Created by Silin Chen on 5/1/20.
-//  Copyright © 2020 Silin Chen. All rights reserved.
-//
+
 
 import UIKit
 import Firebase
@@ -102,6 +100,7 @@ class SignUpSignInVC: UIViewController {
 				// add account to database
 				db.collection("Users").document(email).setData([
 					"Email": email,
+					"IDMap" : [:],
 					"Name": name,
 					"isLecturer": self.signUpAsToggle.titleForSegment(at: self.signUpAsToggle.selectedSegmentIndex) == "Lecturer"
 				]) { err in
