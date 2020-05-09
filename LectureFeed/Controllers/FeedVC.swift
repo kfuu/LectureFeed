@@ -68,7 +68,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 					let dateNS = date.dateValue()
 					
 					let q = Question(sender: sender, bodyText: bodyText, date: dateNS as Date, numLikes: numLikes)
-					arr.shared.questionsArr.append(q)
+					arr.shared.questionsArr.insert(q, at: 0)
 				}
 
 			} // end document exists
