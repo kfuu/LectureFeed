@@ -327,7 +327,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="B9y-ab-dQt">
                         <barButtonItem key="rightBarButtonItem" style="plain" id="yrB-97-Mlc">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Gzw-lV-qap">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Gzw-lV-qap">
                                 <rect key="frame" x="345" y="13" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Submit"/>

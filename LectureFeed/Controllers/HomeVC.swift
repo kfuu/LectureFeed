@@ -35,17 +35,22 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 		self.isModalInPresentation = true
 		
         // Do any additional setup after loading the view.
-		//profileModel = Profile(isHost: false, name: tuplePassed!.0, email: tuplePassed!.1) // initialization
 		
 		getUserProfile()
 		//loadCollectionView()
+		
+		
 
 		lectureCollection.dataSource = self
 		lectureCollection.delegate = self
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		self.loadCollectionView()
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		if isBeingDismissed {
+			print("User is dismissing the vc")
+		}
 	}
 	
 	
@@ -77,7 +82,9 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	}
 	
 	func loadCollectionView() {
-		self.lectureCollection.reloadData()
+		DispatchQueue.main.async { [weak self] in
+			self!.lectureCollection.reloadData()
+		}
 	}
 
 	@IBAction func connectToLecture(_ sender: Any) {
@@ -117,7 +124,7 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 			}
 			//print("B")
 			
-			//self.loadCollectionView()
+			self.loadCollectionView()
 //
 			let alertController = UIAlertController(title: "Lecture ID: \(new_lectureID)", message: "Please distribute this lecture ID code to the lecturees. Don't press OK until you are ready to proceed.", preferredStyle: .alert)
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in
@@ -167,7 +174,7 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 								}
 								//print("K")
 								
-								//self.loadCollectionView()
+								self.loadCollectionView()
 								
 								self.performSegue(withIdentifier: "toLecture", sender: self)
 								break
@@ -220,7 +227,10 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		print(indexPath.item)
+		self.fulllectureIDtoPass = lectureArr.shared.lectureIDArr[indexPath.row]
+		self.lectureIDtoPass = String(((self.fulllectureIDtoPass)?.prefix(5))!)
+		
+		performSegue(withIdentifier: "toLecture", sender: self)
 	}
 	
     /*
@@ -235,13 +245,6 @@ class HomeVC: UIViewController, UICollectionViewDataSource, UICollectionViewDele
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "toLecture" {
-			// pass the profile object
-			
-//			let vc = segue.destination as? FeedVC
-//			vc?.modalPresentationStyle = .fullScreen // maybe? could be affected by nav vc
-//			vc?.profileModel = self.profileModel
-//			vc?.lectureID = self.lectureIDtoPass
-//			vc?.fullLectureID = self.fulllectureIDtoPass
 			
 			let destinationNavigationController = segue.destination as! UINavigationController
 			let targetController = destinationNavigationController.topViewController as? FeedVC
